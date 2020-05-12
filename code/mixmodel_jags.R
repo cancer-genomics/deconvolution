@@ -1,5 +1,6 @@
 library(tidyverse)
 library(rjags)
+library(ggmcmc)
 library(devtools)
 
 load_all("deconvolution.data")
@@ -43,5 +44,19 @@ for(j in seq_len(J)){
     rlist[[j]] <- ratios
     clist[[j]] <- total
 }
+names(rlist) <- names(clist) <- id
+
+##
+## First pass.  Start with sample with high maf
+##
+mafs <- readRDS(file.path(extdir, "tumor_fractions.rds")) %>%
+    arrange(-ichor.tumor.fraction)
+rlist <- rlist[mafs$id]
+clist <- clist[mafs$id]
+s1 <- clist[[1]]
+dat <- list(y=s1$plasma,
+            b=s1$buffy,
+            t=s1$tumor,
+            n=s1$normal)
 
 
