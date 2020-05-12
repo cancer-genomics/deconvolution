@@ -1,4 +1,5 @@
 library(rstan)
+library(ggmcmc)
 N <- 5000
 lambda <- c(5, 15) # poisson parameters
 theta <- c(0.3, 0.7) # mixing proportions
