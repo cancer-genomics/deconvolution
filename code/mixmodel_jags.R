@@ -55,8 +55,13 @@ rlist <- rlist[mafs$id]
 clist <- clist[mafs$id]
 s1 <- clist[[1]]
 dat <- list(y=s1$plasma,
-            b=s1$buffy,
-            t=s1$tumor,
-            n=s1$normal)
+            wbc=log(s1$buffy),
+            tumor=log(s1$tumor),
+            normal=(s1$normal))
+fit <- jags.model("mixmodel.jag",
+                  data=dat,
+                  n.chains=3)
+samples <- coda.samples(fit, variable.names="theta", n.iter=1000) %>%
+    ggs()
 
 
