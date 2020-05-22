@@ -16,22 +16,24 @@ means <- tumor.fraction*normal + (1-tumor.fraction)*wbc
 y <- rpois(n, means)
 
 data <- list(y=y, wbc=log(wbc), normal=log(normal))
+dat <- list(y=y, wbc=wbc, normal=normal)
 
 fit <- jags.model("sim_mixmodel.jag",
-                  data=data,
+                  data=dat,
                   inits=list(b1=c(0.99, 0.01)),
                   n.chains=3)
 samples <- coda.samples(fit, variable.names=c("b1", "b0"),
-                        n.iter=10000,
+                        n.iter=1000,
                         thin=10)
 ##samples2 <- samples %>% filter(Parameter %in% c('b1[1]','b1[2]'))
-samples2 <- ggs(samples, family="b1")
-ggs_traceplot(samples2) +
-    ylim(c(0, 1))  +
-    theme_bw() +
-    ylab("")
 
-m <- spread(samples2, Parameter, value)
-coda::effectiveSize(m[[3]])
+## only need to plot one of the coefficients at this point
+samples2 <- ggs(samples) %>%
+    filter(Parameter=="b1[1]") 
+ggs_traceplot(samples2) +
+    theme_bw() +
+    ylab("") +
+    ylim(c(0.8, 1)) +
+    geom_hline(yintercept=0.99)
 
 
