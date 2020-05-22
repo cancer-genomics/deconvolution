@@ -31,7 +31,7 @@ ggs_traceplot(samples2) +
     theme_bw() +
     ylab("")
 
-m <- spread(samples2, Parameter, value)
-coda::effectiveSize(m[[3]])
+##m <- spread(samples2, Parameter, value)
+##coda::effectiveSize(m[[3]])
 
 
