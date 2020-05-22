@@ -7,7 +7,6 @@ model{
         y[i] ~ dpois(theta[i])
         log(theta[i]) <- b1[1]*normal[i] + b1[2]*wbc[i] + b0
     }
-    
     b0 ~ dnorm(0,0.1)
     b1 ~ ddirich(c(1,1))
 }
