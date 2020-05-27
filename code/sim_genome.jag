@@ -5,10 +5,12 @@ data{
 model{
     for(i in 1:N){
         y[i] ~ dpois(theta[i])
-        log(theta[i]) <- b0 + (z[i]*(b1[1]*normal[i] + b1[2]*wbc[i])) + ((1-z[i])*b1[2]*wbc[i])
-        z[i] ~ dbern(p) #does this bin have a tumor contribution? 
+        #log(theta[i]) <- b0 + (z[i]*(b1[1]*normal[i] + b1[2]*wbc[i])) + ((1-z[i])*b1[2]*wbc[i])
+        #z[i] ~ dbern(p) #does this bin have a tumor contribution? 
+        log(theta[i]) <- b0 + (z*(b1[1]*normal[i] + b1[2]*wbc[i])) + ((1-z)*(b1[2]*wbc[i]))
     }
-    p ~ dbeta(1,1)
+   # p ~ dbeta(1,1)
+   z ~ dbern(0.5)
     b0 ~ dnorm(0,0.1)
     b1 ~ ddirich(c(1,1))
 }

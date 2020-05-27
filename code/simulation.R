@@ -38,8 +38,9 @@ wbc.chunk <- chunker(wbc, groups)
 normal.chunk <- chunker(normal,groups)
 
 estimates.wbc <- numeric(groups)
-estimates.z <- numeric(bins)
+estimates.z <- numeric(groups)
 
+spotchecks <- sample(1:groups, 5, replace=FALSE)
 
 for (iter in 1:groups){
     data <- list(y=y.chunk[[iter]], wbc=wbc.chunk[[iter]], normal=normal.chunk[[iter]])
@@ -62,10 +63,9 @@ for (iter in 1:groups){
     z.summary <- samples3 %>% group_by(Parameter) %>% summarize(values=tail(value,1))
 
     estimates.wbc[iter] <- wbc.estimate
-    estimates.z[(((iter-1)*grouplength) + 1):(iter*grouplength)] <- z.summary$values
+   # estimates.z[(((iter-1)*grouplength) + 1):(iter*grouplength)] <- z.summary$values
+    estimates.z[iter] <- z.summary$values
 
-    spotchecks <- sample(iter, n=5, replace=FALSE)
-    
     if (iter %in% spotchecks){
         file <- paste0("output_sim/wbc_frac_",iter,".pdf")
         out <- ggs_traceplot(samples.wbc) +
@@ -76,6 +76,11 @@ for (iter in 1:groups){
         ggsave(file, out,  width=10, height=10, units="in")
     }
 }
+
+writeLines(as.character(estimates.z), "output_sim/z_estimates.txt")
+writeLines(as.character(estimates.wbc), "output_sim/wbc_estimates.txt")
+print("done")
+
 ##
 ## Next steps
 ## 
