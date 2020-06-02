@@ -1,0 +1,14 @@
+data{
+    N <- length(y)
+}
+
+model{
+    for(i in 1:N){
+        y[i] ~ dpois(theta[i])
+        log(theta[i]) <- b0 + (b1[1]*wbc[i]) + (b1[2]*tumor[i]) + (b1[3]*normal[i])
+    }
+    b0 ~ dnorm(0,0.1)
+    b1 ~ ddirich(c(50,1,1))
+
+    b2 <- b1[2] + b1[3]
+}

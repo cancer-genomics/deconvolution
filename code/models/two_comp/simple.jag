@@ -1,0 +1,12 @@
+data{
+    N <- length(y)
+}
+
+model{
+    for(i in 1:N){
+        y[i] ~ dpois(theta[i])
+        log(theta[i]) <- b0 + (b2*normal[i]) + ((1-b2)*wbc[i])
+    }
+    b0 ~ dnorm(0,0.1)
+    b2 ~ dbeta(1,1)
+}
