@@ -29,17 +29,17 @@ for (iter in 1:length(files)){
     tf.condexp[is.na(tf.condexp)] <- 0
     tf.condexp <- mean(tf.condexp)
     fin.z <- round(num.groups*group.fraction)
-    
-    estimates[iter, ] <- c(name, tf.condexp, tf.multiplied, tf.blind, true.tf)
 
+    estimates[iter, ] <- c(name, tf.condexp, tf.multiplied, tf.blind, true.tf)
     dat <- dat[1:num.groups,]
 
-    zs <- ggplot(dat, aes(x=groups, y=z.total)) + geom_point() + theme_bw() + ylab("Post. Mean of Z") + geom_segment(aes(x=1,xend=fin.z,y=1,yend=1)) + geom_segment(aes(x=fin.z+1,xend=num.groups,y=0,yend=0))
-    b2s <- ggplot(dat, aes(x=groups, y=multiplied.mean)) + geom_point() + theme_bw() + ylab("E[z*b2]") + geom_segment(aes(x=1,xend=fin.z,y=tumor.fraction,yend=tumor.fraction)) + geom_segment(aes(x=fin.z + 1, xend=num.groups, y=0, yend=0))
+    zs <- ggplot(dat, aes(x=groups, y=z.total)) + geom_point() + theme_bw() + ylab("Post. Mean of Z") + geom_segment(aes(x=1,xend=fin.z,y=1,yend=1), color="red") + geom_segment(aes(x=fin.z+1,xend=num.groups,y=0,yend=0), color="blue")
+    b2s <- ggplot(dat, aes(x=groups, y=multiplied.mean)) + geom_point() + theme_bw() + ylab("E[z*b2]") + geom_segment(aes(x=1,xend=fin.z,y=tumor.fraction,yend=tumor.fraction), color="red") + geom_segment(aes(x=fin.z + 1, xend=num.groups, y=0, yend=0), color="blue")
+    
     plotfile <- paste0("plots/",name, ".pdf")
     pdf(plotfile)
-    zs
-    b2s
+    print(zs)
+    print(b2s)
     dev.off()
 
 }
@@ -53,9 +53,4 @@ compare <- ggplot(estimates, aes(fill=type, y=estimate, x=id)) + geom_bar(stat="
 pdf("estimates.pdf")
 compare
 dev.off()
-
-
-
-
-
 
