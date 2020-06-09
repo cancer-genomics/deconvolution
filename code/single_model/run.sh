@@ -13,11 +13,11 @@ module load conda_R/devel
 Rscript /dcl01/scharpf1/data/aarun/deconvolution/code/single_model/sim.R 0.5 0.2
 echo done
 
-#Rscript /dcl01/scharpf1/data/aarun/deconvolution/code/groups_simulation.R 0.5 0.1
+Rscript /dcl01/scharpf1/data/aarun/deconvolution/code/single_model/sim.R 0.5 0.1
 echo done
 
-#Rscript /dcl01/scharpf1/data/aarun/deconvolution/code/groups_simulation.R 0.1 0.2
+Rscript /dcl01/scharpf1/data/aarun/deconvolution/code/single_model/sim.R 0.1 0.2
 echo done
 
-#Rscript /dcl01/scharpf1/data/aarun/deconvolution/code/groups_simulation.R 0.1 0.1
+Rscript /dcl01/scharpf1/data/aarun/deconvolution/code/single_model/sim.R 0.1 0.1
 echo done

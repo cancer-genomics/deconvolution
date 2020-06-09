@@ -64,8 +64,10 @@ print(mult.mean)
 print(cond.exp)
 print("here comes the truth")
 print(true.tf)
+print("done")
 
-saveRDS(samples, "single_model/res.rds")
+fileoutput <- paste0("single_model/groups_",groups.w.tumor,"_tf_",tumor.fraction,".rds")
+saveRDS(samples, fileoutput)
 
 #what sort of analyses do we want out of this?
 #results should be exactly what we got before or damn near close
