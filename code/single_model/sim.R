@@ -59,10 +59,28 @@ tumor.derived <- which(extract.z$value==1)
 cond.exp <- mean(extract.b2$value[tumor.derived])
 true.tf <- tumor.fraction*groups.w.tumor
 
-print("entry")
+multmean.value <- extract.z$value*extract.b2$value
+condexp.value <- extract.b2$value[tumor.derived]
+
+ci <- function(x, nboot=1000){
+	mu_bar <- mean(x)
+	len <- length(x)
+	mu_star <- unlist(lapply(1:nboot, function(dummy) mean(sample(x, replace=TRUE, len))))
+	delta <- mu_star - mu_bar
+	delta <- sort(delta)
+	
+	confint <- c(round(nboot*0.05), round(nboot*0.95))
+	val <- c(mu_bar + delta[confint[1]], mu_bar + delta[confint[2]])
+	return(val)
+}
+
+print("multmean")
 print(mult.mean)
+print(ci(multmean.value))
+print("condexp")
 print(cond.exp)
-print("here comes the truth")
+print(ci(condexp.value))
+print("truth")
 print(true.tf)
 print("done")
 
