@@ -5,9 +5,9 @@ data{
 model{
     for(i in 1:N){
         y[i] ~ dpois(theta[i])
-        log(theta[i]) <- (z*(p[1] * normal[i] + p[2] * tumor[i] + p[3] * wbc[i])) + ((1-z)*(p[3]*wbc[i]))
+        theta[i] <- b0 + (z*(p[1] * normal[i] + p[2] * tumor[i] + p[3] * wbc[i])) + ((1-z)*(p[3]*wbc[i]))
     }
     z ~ dbin(0.5, 1)
     p ~ ddirich(c(1,1,1))
+    b0 ~ dnorm(0, 0.1)
 }
-
