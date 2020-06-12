@@ -13,6 +13,7 @@ Registered S3 method overwritten by 'GGally':
 Loading required package: coda
 Linked to JAGS 4.3.0
 Loaded modules: basemod,bugs
+[1] "log_z"
 Compiling data graph
    Resolving undeclared variables
    Allocating nodes
@@ -22,35 +23,12 @@ Compiling model graph
    Resolving undeclared variables
    Allocating nodes
 Graph information:
-   Observed stochastic nodes: 50000
-   Unobserved stochastic nodes: 2000
-   Total graph size: 514318
+   Observed stochastic nodes: 26238
+   Unobserved stochastic nodes: 117
+   Total graph size: 315210
 
 Initializing model
 
-Warning message:
-In jags.model(model.file, data = data, n.chains = 1) :
-  Adaptation incomplete
 NOTE: Stopping adaptation
 
 
-[1] 0.1
-[1] 0.4719891
-Error: unexpected string constant in "saveRDS(items "experiment.csv""
-Execution halted
-done
-done
-done
-done
-done
-done
-done
-done
-done
-done
-done
-done
-done
-done
-done
-done
