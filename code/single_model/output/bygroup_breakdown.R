@@ -43,13 +43,13 @@ answer <- extract.z$value*extract.b2$value
 
 grouplength <- (dim(dat)[1]/3) / n.groups
 
-dat <- as_tibble(data.frame(estimate.tf=answer, group=rep(1:n.groups, each=grouplength)))
+dat <- as_tibble(data.frame(val=answer, group=rep(1:n.groups, each=grouplength)))
+dat <- dat %>% group_by(group) %>% summarize(estimate.tf=mean(val)) %>% ungroup()
 groups.w.tumor <- as.numeric(str_sub(x, -11, -9))
     tumor.fraction <- as.numeric(str_sub(x, -7, -5))
     dat$true.tf <- 0
     dat$true.tf[1:(n.groups*groups.w.tumor)] <- tumor.fraction
     dat <- dat %>% pivot_longer(-group, names_to="type", values_to="tumor.fraction")
-
     out <- ggplot(dat, aes(x=group, y=tumor.fraction, color=type)) + geom_point() + ggtitle(paste0("Z, groups.w.tumor: ", groups.w.tumor, ", tumor.frac for those groups: ", tumor.fraction))
     out
 }
