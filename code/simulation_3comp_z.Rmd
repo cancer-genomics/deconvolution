@@ -1,0 +1,86 @@
+---
+title: "Three-component deconvolution model with z"
+date: "`r format(Sys.Date())`"
+output:	
+  html_document:
+    keep_md: true
+---
+
+
+```{r packages, message=FALSE}
+library(tidyverse)
+library(ggmcmc)
+library(rjags)
+library(fs)
+outdir <- file.path("..", "output", "simulation_3comp_z.Rmd")
+dir_create(outdir)
+```
+
+Simulate fragment-level coverage for buffy coat (wbc), normal tissue (normal), andtumor tissue.
+
+```{r simulation}
+##setwd("/dcl01/scharpf1/data/aarun/deconvolution/code/models")
+lambdas <- c(300, 400, 500)
+nbins <- 1000
+wbc <- rpois(nbins, lambdas[1])
+normal <- rpois(nbins, lambdas[2])
+tumor <- rpois(nbins, lambdas[3])
+tf.nf <- c(0.05, 0.1)
+p <- c(tf.nf, 1-sum(tf.nf))
+##
+## Assumes same normal/tumor/wbc contribution across all bins
+##
+plasma_means <- p[1]*normal + p[2]*tumor + p[3]*wbc
+plasma <- rpois(nbins, plasma_means)
+dat <- tibble(y=plasma,
+              wbc=wbc,
+              normal=normal,
+              tumor=tumor,
+              mixture=plasma_means)
+```
+
+```{r plot_simulation}
+ggplot(dat, aes(mixture, y)) +
+    geom_point() +
+    xlab(expression("p[1]N+p[2]T+p[3]W")) +
+    geom_smooth(method=lm, se=FALSE) +
+    xlim(c(200, 400)) +
+    ylim(c(200, 400))
+```
+
+# MCMC
+
+```{r fit_jags, cache=TRUE, message=FALSE, results="hide"}
+jags_data <- dat %>%
+    select(-mixture) %>%
+    as.list()
+model <- file.path("models", "three_comp", "z.jag")
+fit <- jags.model(model, data=jags_data, n.chains=1)
+samples <- coda.samples(fit,
+                        variable.names=c("p","z"), 
+                        n.iter=500*1000, thin=500)
+```
+
+# Post-hoc diagnostics
+
+```{r diagnostics}
+## Would like this to be near 1000
+coda::effectiveSize(samples)
+chains <- ggs(samples)
+p <- c(p,1)
+truth <- tibble(p=p, Parameter=levels(chains$Parameter))
+chains %>%
+    ggs_traceplot() +
+    geom_hline(data=truth, aes(yintercept=p))
+```
+
+```{r save_results, echo=FALSE}
+outfile <- file.path(outdir, "mcmc_chains.rds")
+saveRDS(samples, outfile)
+```
+
+# Session info
+
+```{r sessioninfo}
+devtools::session_info()
+```
